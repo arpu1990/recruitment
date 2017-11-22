@@ -1,0 +1,118 @@
+{% extends 'application/dashboard_main.html' %}
+
+{% block style %}
+<style type="text/css">
+  .new_color {
+     background-color: #337ab7 !important;
+  }
+  .accepted_color{
+     background-color: #5cb85c !important;
+  }
+  .rejected_color{
+    background-color: #d9534f !important;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+<h2> User</h2>
+<hr>
+<div class="form-horizontal col-md-8  col-xs-12">
+<div class="form-group ">
+    <label for="inputEmail3" class="col-sm-2 control-label">First Name:</label>
+    <div class="col-sm-8">
+      <!-- <input type="text" class="form-control" id="inputEmail3" placeholder="Email" value = "{{user.first_name}}"> -->
+      <p class="form-control-static">{{user.first_name|capfirst}}</p>
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Last Name:</label>
+    <div class="col-sm-8">
+    <p class="form-control-static">{{user.last_name|capfirst}}</p>
+      <!-- <input type="text" class="form-control" id="inputEmail3" placeholder="Email" value = "{{user.last_name}}"> -->
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Email Name:</label>
+    <div class="col-sm-8">
+    <p class="form-control-static">{{user.email}}</p>
+      <!-- <input type="text" class="form-control" id="inputEmail3" placeholder="Email" value = "{{user.email}}"> -->
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Position:</label>
+    <div class="col-sm-8">
+    <p class="form-control-static">{{user.position|capfirst}}</p>
+      <!-- <input type="text" class="form-control" id="inputEmail3" placeholder="Email" value = "{{user.position}}"> -->
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Total Years of Experience:</label>
+    <div class="col-sm-8">
+    <p class="form-control-static">{{user.year_of_exp}}</p>
+     <!--  <input type="text" class="form-control" id="inputEmail3" placeholder="Email" value = "{{user.year_of_exp}}"> -->
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Message:</label>
+    <div class="col-sm-8">
+      <!-- <input type="text" class="form-control" id="inputEmail3" placeholder="Email" value = "{{user.first_name}}">
+       -->
+       <textarea> {{ user.message }}</textarea>
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputEmail3" class="col-sm-2 control-label">Status:</label>
+    <div class="col-sm-8">
+    <p class="form-control-static" id="app_status">{{user.app_status|capfirst}}</p>
+     <!--  <input type="text" class="form-control" id="inputEmail3" placeholder="Email" value = "{{user.app_status}}"> -->
+    </div>
+</div>
+
+<div class="form-group">
+    
+    <div class="col-sm-10">
+        <button type="button" id = "accepted_btn" class="btn btn-success update_status col-md-3" {% if user.app_status = 'accepted' %} disabled="disabled" {% endif %} user_id="{{user.id}}" status="accepted">Accept</button>
+        <button type="button" id = "rejected_btn" class="btn btn-danger update_status col-md-3 col-md-offset-1"   {% if user.app_status = 'rejected' %} disabled="disabled" {% endif %} user_id="{{user.id}}" status="rejected">Reject</button>
+    </div>
+</div>
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    $('.update_status').click(function(){
+
+      var status = $(this).attr('status')
+
+      $.ajax({
+        url: '/update_status/',
+        method: "POST",
+        data : {'user_id': $(this).attr('user_id'), 'status': status },
+        success: function(result){
+          if (status == "accepted"){
+              $("#app_status").html('Accepted')
+              $("#accepted_btn").attr('disabled', 'disabled')
+              $("#rejected_btn").removeAttr('disabled')
+          }
+          if (status == "rejected"){
+              $("#app_status").html('Rejected')
+              $("#rejected_btn").attr('disabled', 'disabled')
+              $("#accepted_btn").removeAttr('disabled')
+
+          }
+
+        }
+      })
+
+
+    })
+
+  })
+</script>
+{% endblock %}
+
+
